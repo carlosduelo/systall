@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function _mkinitcpio {
+    # mkinitcpio
+    sed -i -e 's~^BINARIES=()$~BINARIES=(/usr/bin/btrfs)~g' /etc/mkinitcpio.conf
+    sed -i -e 's~^HOOKS=(.*)$~HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block sd-encrypt filesystems fsck)~g' /etc/mkinitcpio.conf
+    # sd-vconsle needs vconsole.conf file
+    echo "KEYMAP=es" > /etc/vconsole.conf
+    mkinitcpio -p linux
+}
+
+function _grub {
+    local -r model=$1
+    local -r device="$(find_disk_dev "$model")"
+    local -r uuid="$(find_uuid_dev "${device}3")"
+
+    # Grub
+    sed -i -e "s~^GRUB_CMDLINE_LINUX_DEFAULT=.*$~GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$uuid=cryptroot quiet\"~g" /etc/default/grub
+    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB "/dev/$device"
+    grub-mkconfig -o /boot/grub/grub.cfg
+}
+
+source "/root/systall/distributions/common/devices"
+source "/root/systall/distributions/common/user"
+source "/root/systall/distributions/arch/firstboot"
+
+create_firstboot "/root/systall/profiles/laptop/firstboot"
+_mkinitcpio
+_grub "Samsung SSD 850"
+
+echo "Type the root password"
+passwd root
+
+# Create user
+echo "Creating a new user, please type type the name:"
+read username
+create_user "$username"
+usergroups=($(cat "/root/systall/data/laptop/groups"))
+add_user_groups "$username" usergroups
+
+# Set preferences in firtsboot script
+echo "Select a timezone"
+read timezone
+sed -i -e "s~###TIMEZONE###~$timezone~g" "/root/systall/profiles/laptop/firstboot"
+
+exit

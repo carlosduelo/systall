@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function configure_i3 {
+    local -r cpath=$1
+
+    cp "$cpath/data/common/usr/local/bin/i3exit" "/usr/local/bin/"
+}
+
+function configure_xorg {
+    local -r cpath=$1
+
+    cp "$cpath/data/common/etc/X11/xorg.conf.d/10-keyboard.conf" "/etc/X11/xorg.conf.d/10-keyboard.conf"
+    cp "$cpath/data/common/etc/X11/xorg.conf.d/20-keyboard.conf" "/etc/X11/xorg.conf.d/20-keyboard.conf"
+}
+
+function enable_wheel_sudo {
+    echo '%wheel ALL=(ALL:ALL) ALL' | sudo EDITOR='tee -a' visudo
+}

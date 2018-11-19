@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function install_arch {
+    local -r profile=$1
+    local -r mpath=$2
+    local -r cpath=$3
+    local -r toinstall=($(grep -v "^#" "$cpath/data/$profile/list.pkg"))
+
+    echo "Installing: ${toinstall[@]}"
+    pacstrap "$mpath" ${toinstall[@]}
+}
+
+function update_arch {
+    local -r profile=$1
+    local -r cpath=$2
+
+    echo "Package list: ${toinstall[@]}"
+    grep -v "^#" "$cpath/data/$profile/list.pkg" | sudo pacman -S --needed -
+}

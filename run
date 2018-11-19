@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function show_usage {
+    cat <<EOF
+Usage: $0 [profile]
+
+profile    Profile to be installed:
+            - pc
+            - laptop
+            - raspberrypi
+            - vps4
+EOF
+}
+
+if [ "$#" -ne 1 ]; then
+    show_usage
+    exit
+fi
+
+function run_profile {
+    local -r profile=$1
+    local -r cpath=$(cd $(dirname $0); pwd)
+    local -r path="$cpath/profiles/$profile/run"
+    if [ ! -f "$path" ]; then
+        echo "Profile does not exist"
+        exit
+    fi
+    source "$path"
+    echo "Install system"
+    install_system "$cpath"
+}
+
+run_profile "$1"

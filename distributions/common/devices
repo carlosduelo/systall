@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function find_disk_dev {
+    local model=$1
+
+    if [[ $(lsblk -S -o kname,model | grep "$model" | wc -l) != 1 ]]; then
+        die 'could not identify an unique disk'
+    fi
+
+    local dev=$(lsblk -S -o kname,model | awk "/$model/"'{print $1}')
+
+    echo $dev
+}
+
+function find_uuid_dev {
+    local device=$1
+
+    if ! blkid "/dev/$device" > /dev/null; then
+        die 'could not identify an device'
+    fi
+
+    local uuid=$(blkid --output export "/dev/$device" | grep "^UUID=" | sed -e 's~^UUID=~~')
+
+    echo $uuid
+}

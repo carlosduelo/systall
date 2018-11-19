@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function create_firstboot {
+    local -r script=$1
+
+    cat <<EOF > /usr/lib/systemd/system/systall-firstboot.service
+# Systall install script
+#
+
+[Unit]
+Description=First Boot Wizard
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=dbus.service
+Before=shutdown.target
+ConditionPathIsReadWrite=/etc
+ConditionPathExists=/root/systall
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=$script
+StandardOutput=syslog
+StandardInput=tty
+StandardError=syslog
+SyslogIdentifier=systall
+EOF
+
+ln -s /usr/lib/systemd/system/systall-firstboot.service /usr/lib/systemd/system/sysinit.target.wants/
+}
+
+function remove_firstboot {
+ rm -f /usr/lib/systemd/system/systall-firstboot.service /usr/lib/systemd/system/sysinit.target.wants/systall-firstboot.service
+}

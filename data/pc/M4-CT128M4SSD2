@@ -1,0 +1,7 @@
+label: dos
+label-id: 0x056ee3c9
+unit: sectors
+
+/dev/sda1 : start=        2048, size=      407553, type=83
+/dev/sda2 : start=      411648, size=    33142785, type=82
+/dev/sda3 : start=    33556480, size=   216513200, type=83

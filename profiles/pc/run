@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function _prepare_disks {
+    local -r cpath=$1
+    local -r model_disk1=$2
+    local -r model_disk2=$3
+    local -r device_disk1="/dev/$(find_disk_dev "$model_disk1")"
+    local -r device_disk2="/dev/$(find_disk_dev "$model_disk2")"
+
+    echo "Running fdisk"
+    sfdisk "$device_disk1" < "$cpath/data/pc/M4-CT128M4SSD2"
+    sfdisk "$device_disk2" < "$cpath/data/pc/ST9500325AS"
+
+    echo "Preparing boot partition"
+    mkfs.fat -F32 "${device_disk1}1"
+    echo "Make Swap partition"
+    mkswap "${device_disk1}2"
+    echo "Preparing dm-crypt"
+    cryptsetup -y -v luksFormat --type luks2 "${device_disk1}3"
+    cryptsetup --persistent --allow-discards open "${device_disk1}3" cryptdisk1
+    cryptsetup -y -v luksFormat --type luks2 "${device_disk2}1"
+    cryptsetup --persistent --allow-discards open "${device_disk2}1" cryptdisk2
+
+    mkfs.btrfs -d single -f /dev/mapper/cryptdisk1 /dev/mapper/cryptdisk2
+    echo "Preparing rootfs subvolumes"
+    mount /dev/mapper/cryptdisk1 /mnt
+    btrfs subvolume create /mnt/@
+    btrfs subvolume create /mnt/@home
+    btrfs subvolume create /mnt/@snapshots
+    umount /mnt
+
+    echo "Mount on /mnt"
+    mount -o subvol=@ /dev/mapper/cryptdisk1 /mnt
+    mkdir /mnt/{boot,home,.snapshots}
+    mount "${device_disk1}1" /mnt/boot
+    mount -o subvol=@home /dev/mapper/cryptdisk1 /mnt/home
+    mount -o subvol=@snapshots /dev/mapper/cryptdisk1  /mnt/.snapshots
+    swapon "${device_disk1}2"
+}
+
+function install_system {
+    local -r cpath=$1
+
+    source "$cpath/distributions/arch/install"
+    source "$cpath/distributions/arch/config"
+    source "$cpath/distributions/common/devices"
+
+    echo "Prepare disks"
+    _prepare_disks "$cpath" "M4-CT128M4SSD2" "ST9500325AS"
+
+    echo "Enable multilib"
+    enable_multilib_rep
+
+    install_arch "pc" "/mnt" "$cpath"
+
+    # Create fstab
+    genfstab -U "/mnt" >> "/mnt/etc/fstab"
+
+    # Copy data
+    cp -r "$cpath" /mnt/root/systall
+
+    # Configure
+    arch-chroot "/mnt" "/root/systall/profiles/pc/chrun"
+
+    umount -R "/mnt"
+    swapoff --all
+    reboot
+}

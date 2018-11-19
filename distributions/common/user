@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function create_user {
+    local -r username=$1
+    useradd -m -G users -s /bin/bash "$username"
+    echo "Type the user password"
+    passwd "$username"
+}
+
+function add_user_groups {
+    local -r username=$1
+    local -n groups=$2
+
+    for group in "${groups[@]}"
+    do
+        usermod -a -G "$group" "$username"
+    done
+}

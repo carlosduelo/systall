@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "/root/systall/distributions/common/config"
+source "/root/systall/distributions/arch/config"
+source "/root/systall/distributions/arch/firstboot"
+
+configure_i3 "/root/systall"
+configure_xorg "/root/systall"
+enable_wheel_sudo
+
+configure_arch "asterix" ###TIMEZONE###
+services_arch
+enable_multilib_rep
+
+remove_firstboot
+rm -rf /root/systall
+systemctl reboot

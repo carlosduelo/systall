@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function configure_arch {
+    local -r hostname=$1
+    local -r timezone=$2
+
+    # Set locales
+    sed -i -e 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+    sed -i -e 's/^#es_ES.UTF-8 UTF-8/es_ES.UTF-8 UTF-8/' /etc/locale.gen
+    locale-gen
+    localectl set-locale LANG=en_US.UTF-8
+    localectl set-locale LC_MESSAGES=C
+    localectl set-locale LC_COLLATE=C
+    timedatectl set-timezone "$timezone"
+    hostnamectl set-hostname "$hostname"
+    timedatectl set-ntp true
+    hwclock --systohc
+}
+
+function enable_multilib_rep {
+    echo "[multilib]" >> "/etc/pacman.conf"
+    echo "Include = /etc/pacman.d/mirrorlist" >> "/etc/pacman.conf"
+}
+
+function services_arch {
+    if pacman -Qi lightdm > /dev/null ; then
+        systemctl enable lightdm.service
+    fi
+    if pacman -Qi networkmanager > /dev/null ; then
+        systemctl enable NetworkManager
+    fi
+    if pacman -Qi openssh > /dev/null ; then
+        systemctl enable sshd
+    fi
+    if pacman -Qi udisks2 > /dev/null ; then
+        systemctl enable udisks2.service
+    fi
+    if pacman -Qi cups > /dev/null ; then
+        systemctl enable org.cups.cupsd.service
+    fi
+    if pacman -Qi docker > /dev/null ; then
+        systemctl enable docker.service
+    fi
+}

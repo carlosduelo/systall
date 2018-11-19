@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function show_usage {
+    cat <<EOF
+Usage: $0 [profile]
+
+profile    Profile to be installed:
+            - pc
+            - laptop
+            - raspberrypi
+            - vps4
+EOF
+}
+
+if [ "$#" -ne 1 ]; then
+    show_usage
+    exit
+fi
+
+function run_profile {
+    local -r profile=$1
+    local -r cpath=$(cd $(dirname $0); pwd)
+    local -r path="$cpath/profiles/$profile/update"
+    if [ ! -f "$path" ]; then
+        echo "Update packages"
+        source "$cpath/distributions/arch/install"
+        update_arch "$profile" "$cpath"
+        echo "Updating groups for user, please type type the name:"
+        read username
+        source "$cpath/distributions/common/user"
+	usergroups=($(cat "$cpath/data/$profile/groups"))
+        add_user_groups "$username" usergroups
+        echo "Enable new services"
+        source "$cpath/distributions/arch/config"
+        services_arch 
+    else
+        source "$path"
+        echo "Update system"
+        update_system "$cpath"
+    fi
+}
+
+run_profile "$1"
