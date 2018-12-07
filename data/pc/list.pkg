@@ -89,6 +89,7 @@ tig
 gdb
 valgrind
 gcc
+clang
 #CONTAINER
 rkt
 buildah
