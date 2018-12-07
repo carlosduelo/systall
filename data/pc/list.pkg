@@ -110,3 +110,5 @@ epson-inkjet-printer-escpr
 #STEAM
 steam
 ttf-liberation
+#LATEX
+texlive-core

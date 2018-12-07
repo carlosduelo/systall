@@ -103,3 +103,5 @@ yubikey-personalization-gui
 #STEAM
 steam
 ttf-liberation
+#LATEX
+texlive-core
