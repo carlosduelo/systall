@@ -39,6 +39,7 @@ xorg-fonts
 dunst
 #MULTIMEDIA
 firefox
+chromium
 zathura
 zathura-pdf-poppler
 feh

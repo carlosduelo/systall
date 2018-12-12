@@ -41,6 +41,7 @@ nvidia-settings
 lib32-nvidia-utils
 #MULTIMEDIA
 firefox
+chromium
 zathura
 zathura-pdf-poppler
 feh
