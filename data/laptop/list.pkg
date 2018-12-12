@@ -27,6 +27,8 @@ xorg-xbacklight
 pulseaudio-alsa
 pulseaudio
 pavucontrol
+pulseaudio-bluetooth
+ponymix
 udisks2
 networkmanager
 udiskie
