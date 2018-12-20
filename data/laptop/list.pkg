@@ -53,8 +53,10 @@ xterm
 tmux
 rxvt-unicode
 urxvt-perls
+#FONTS
 ttf-inconsolata
 noto-fonts-emoji
+ttf-dejavu
 #NETWORKING
 sshfs
 dnsutils
