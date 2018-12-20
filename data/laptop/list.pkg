@@ -57,6 +57,7 @@ urxvt-perls
 ttf-inconsolata
 noto-fonts-emoji
 ttf-dejavu
+noto-fonts
 #NETWORKING
 sshfs
 dnsutils
