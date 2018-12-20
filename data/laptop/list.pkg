@@ -54,7 +54,7 @@ tmux
 rxvt-unicode
 urxvt-perls
 ttf-inconsolata
-
+noto-fonts-emoji
 #NETWORKING
 sshfs
 dnsutils
