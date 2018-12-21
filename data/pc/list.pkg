@@ -55,6 +55,7 @@ xterm
 tmux
 rxvt-unicode
 urxvt-perls
+terminator
 #FONTS
 ttf-inconsolata
 noto-fonts-emoji
