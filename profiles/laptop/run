@@ -40,7 +40,7 @@ function install_system {
     source "$cpath/distributions/common/devices"
 
     echo "Prepare disks"
-    _prepare_disks "$cpath" "Samsung SSD 850"
+    _prepare_disks "$cpath" "Samsung_SSD_850_EVO_250GB"
 
     echo "Enable multilib"
     enable_multilib_rep
