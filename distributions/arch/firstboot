@@ -27,7 +27,7 @@ StandardError=syslog
 SyslogIdentifier=systall
 EOF
 
-ln -s /usr/lib/systemd/system/systall-firstboot.service /usr/lib/systemd/system/sysinit.target.wants/
+ln -sf /usr/lib/systemd/system/systall-firstboot.service /usr/lib/systemd/system/sysinit.target.wants/
 }
 
 function remove_firstboot {
