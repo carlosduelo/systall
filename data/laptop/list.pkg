@@ -30,7 +30,7 @@ pavucontrol
 pulseaudio-bluetooth
 ponymix
 udisks2
-networkmanager
+iwd
 udiskie
 ntfs-3g
 xorg-apps
@@ -99,8 +99,6 @@ valgrind
 gcc
 clang
 #CONTAINER
-rkt
-buildah
 debootstrap
 arch-install-scripts
 docker
