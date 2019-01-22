@@ -29,6 +29,9 @@ function services_arch {
     fi
     if pacman -Qi networkmanager > /dev/null ; then
         systemctl enable NetworkManager
+    elif pacman -Qi iwd > /dev/null ; then
+	systemctl enable systemd-networkd systemd-resolved.service iwd.service
+	ln -fs /run/systemd/resolve/resolv.conf /etc/resolv.conf
     fi
     if pacman -Qi openssh > /dev/null ; then
         systemctl enable sshd
