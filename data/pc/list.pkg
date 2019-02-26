@@ -79,6 +79,7 @@ zip
 unzip
 unrar
 pass
+pass-otp
 stow
 mutt
 bash-completion
