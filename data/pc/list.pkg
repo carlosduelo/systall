@@ -61,6 +61,7 @@ ttf-inconsolata
 noto-fonts-emoji
 ttf-dejavu
 noto-fonts
+ttf-hack
 #NETWORKING
 sshfs
 dnsutils
@@ -106,6 +107,9 @@ ubuntu-keyring
 arch-install-scripts
 docker
 docker-compose
+#VIRTUALIZATION
+qemu
+qemu-arch-extra
 #YUBKEY
 yubikey-manager
 yubikey-manager-qt
