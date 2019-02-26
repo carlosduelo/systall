@@ -30,8 +30,8 @@ function services_arch {
     if pacman -Qi networkmanager > /dev/null ; then
         systemctl enable NetworkManager
     elif pacman -Qi iwd > /dev/null ; then
-	systemctl enable systemd-networkd systemd-resolved.service iwd.service
-	ln -fs /run/systemd/resolve/resolv.conf /etc/resolv.conf
+        systemctl enable systemd-networkd systemd-resolved.service iwd.service
+        ln -fs /run/systemd/resolve/resolv.conf /etc/resolv.conf
     fi
     if pacman -Qi openssh > /dev/null ; then
         systemctl enable sshd
@@ -44,5 +44,9 @@ function services_arch {
     fi
     if pacman -Qi docker > /dev/null ; then
         systemctl enable docker.service
+    fi
+    if pacman -Qi yubikey-manager > /dev/null ; then
+        systemctl enable pcscd.socket
+        systemctl enable pcscd.service
     fi
 }
