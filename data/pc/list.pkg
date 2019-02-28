@@ -12,6 +12,7 @@ sudo
 btrfs-progs
 keychain
 strace
+veracrypt
 #DESKTOP
 xorg
 lightdm
