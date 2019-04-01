@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function install_system {
+    local -r cpath=$1
+
+    source "$cpath/distributions/ubuntu/xenial/install"
+
+    # Install
+    install_ppas "job" "$cpath"
+    install_linux_headers_and_tools
+    install_pkgs "job" "$cpath"
+}

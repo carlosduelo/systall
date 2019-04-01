@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function install_linux_headers_and_tools {
+  apt-get install "linux-tools-"$(uname -r)"" "linux-headers-"$(uname -r)""
+}
+
+function install_ppas {
+    local -r profile=$1
+    local -r cpath=$2
+    local -r toinstall=($(grep -v "^#" "$cpath/data/$profile/ppa.list"))
+
+    echo "Repositories: ${toinstall[@]}"
+    for ppa in "${toinstall[@]}"; do
+        apt-add-repository "$ppa"
+    done
+}
+
+function install_pkgs {
+    local -r profile=$1
+    local -r cpath=$2
+    local -r toinstall=($(grep -v "^#" "$cpath/data/$profile/list.pkg"))
+
+    apt-get install ${toinstall[@]}
+}
