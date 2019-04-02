@@ -56,3 +56,4 @@ debootstrap
 ubuntu-keyring
 docker
 docker-compose
+scdaemon
