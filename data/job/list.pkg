@@ -19,6 +19,7 @@ surf
 xterm
 tmux
 rxvt-unicode
+rxvt-unicode-256color
 terminator
 fonts-inconsolata
 ttf-liberation
