@@ -54,6 +54,7 @@ surf
 #TERMINALS
 xterm
 tmux
+screen
 rxvt-unicode
 urxvt-perls
 terminator

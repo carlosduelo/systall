@@ -18,6 +18,7 @@ youtube-dl
 surf
 xterm
 tmux
+screen
 rxvt-unicode
 rxvt-unicode-256color
 terminator
@@ -46,6 +47,7 @@ aspell-en
 aspell-es
 darktable
 vim
+vim-gtk
 git
 exuberant-ctags
 tig
