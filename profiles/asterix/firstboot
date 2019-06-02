@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "/root/systall/distributions/common/config"
+source "/root/systall/distributions/ubuntu/config"
+
+configure_i3 "/root/systall"
+configure_xorg "/root/systall"
+
+configure "asterix" ###TIMEZONE###
+enable_services
+
+remove_firstboot
+rm -rf /root/systall
+systemctl reboot

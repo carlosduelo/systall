@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function configure {
+    local -r hostname=$1
+    local -r timezone=$2
+
+    # Set locales
+    sed -i -e 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+    sed -i -e 's/^#es_ES.UTF-8 UTF-8/es_ES.UTF-8 UTF-8/' /etc/locale.gen
+    locale-gen
+    localectl set-locale LANG=en_US.UTF-8
+    localectl set-locale LC_MESSAGES=C
+    localectl set-locale LC_COLLATE=C
+    timedatectl set-timezone "$timezone"
+    hostnamectl set-hostname "$hostname"
+    timedatectl set-ntp true
+    hwclock --systohc
+}
+
+function enable_services {
+    systemctl enable lightdm.service || true
+    systemctl enable NetworkManager || true
+    systemctl enable sshd || true
+    systemctl enable udisks2.service || true
+    systemctl enable org.cups.cupsd.service || true
+    systemctl enable docker.service || true
+    systemctl enable pcscd.socket || true
+    systemctl enable pcscd.service || true
+}

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+function install_ubuntu {
+    local -r mpath=$1
+    local -r release="${2:-'bionic'}"
+    local -r repository="http://archive.ubuntu.com/ubuntu/"
+
+    echo "Building machine..."
+    debootstrap "$release" "$mpath" "$repository"
+}
+
+function install_ppas {
+    local -r profile=$1
+    local -r cpath=$2
+    local -r toinstall=($(grep -v "^#" "$cpath/data/$profile/ppa.list"))
+
+    echo ' Install apt-add-repository'
+    apt-get -y install software-properties-common
+    echo "Repositories: ${toinstall[@]}"
+    for ppa in "${toinstall[@]}"; do
+        apt-add-repository "$ppa"
+    done
+}
+
+function install_pkgs {
+    local -r profile=$1
+    local -r cpath=$2
+    local -r toinstall=($(grep -v "^#" "$cpath/data/$profile/list.pkg"))
+
+    apt-get update
+    apt-get -y install ${toinstall[@]}
+}
+
+function update_pkgs {
+    local -r profile=$1
+    local -r cpath=$2
+
+    install_pkgs "$profile" "$cpath"
+}

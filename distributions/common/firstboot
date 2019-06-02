@@ -4,7 +4,7 @@ set -euo pipefail
 function create_firstboot {
     local -r script=$1
 
-    cat <<EOF > /usr/lib/systemd/system/systall-firstboot.service
+    cat <<EOF > /lib/systemd/system/systall-firstboot.service
 # Systall install script
 #
 
@@ -27,9 +27,9 @@ StandardError=syslog
 SyslogIdentifier=systall
 EOF
 
-ln -sf /usr/lib/systemd/system/systall-firstboot.service /usr/lib/systemd/system/sysinit.target.wants/
+ln -sf /lib/systemd/system/systall-firstboot.service /lib/systemd/system/sysinit.target.wants/
 }
 
 function remove_firstboot {
- rm -f /usr/lib/systemd/system/systall-firstboot.service /usr/lib/systemd/system/sysinit.target.wants/systall-firstboot.service
+ rm -f /lib/systemd/system/systall-firstboot.service /lib/systemd/system/sysinit.target.wants/systall-firstboot.service
 }
