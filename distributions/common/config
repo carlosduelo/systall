@@ -10,6 +10,7 @@ function configure_i3 {
 function configure_xorg {
     local -r cpath=$1
 
+    mkdir -p '/etc/X11/xorg.conf.d/'
     cp "$cpath/data/common/etc/X11/xorg.conf.d/10-keyboard.conf" "/etc/X11/xorg.conf.d/10-keyboard.conf"
     cp "$cpath/data/common/etc/X11/xorg.conf.d/20-keyboard.conf" "/etc/X11/xorg.conf.d/20-keyboard.conf"
 }

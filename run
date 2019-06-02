@@ -9,7 +9,7 @@ profile    Profile to be installed:
             - pc
             - laptop
             - raspberrypi
-            - vps4
+            - asterix
 EOF
 }
 

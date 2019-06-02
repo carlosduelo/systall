@@ -20,7 +20,7 @@ function find_uuid_dev {
         die 'could not identify an device'
     fi
 
-    local uuid=$(blkid --output export "/dev/$device" | grep "^UUID=" | sed -e 's~^UUID=~~')
+    local uuid=$(blkid -o export "/dev/$device" | grep "^UUID=" | sed -e 's~^UUID=~~')
 
     echo $uuid
 }
