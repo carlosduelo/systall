@@ -6,10 +6,8 @@ function show_usage {
 Usage: $0 [profile]
 
 profile    Profile to be installed:
-            - pc
-            - laptop
-            - raspberrypi
-            - vps4
+            - oblix
+            - asterix
 EOF
 }
 
@@ -33,7 +31,7 @@ function run_profile {
         add_user_groups "$username" usergroups
         echo "Enable new services"
         source "$cpath/distributions/arch/config"
-        services_arch 
+        services_arch
     else
         source "$path"
         echo "Update system"

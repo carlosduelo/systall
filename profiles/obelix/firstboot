@@ -2,17 +2,18 @@
 set -euo pipefail
 
 source "/root/systall/distributions/common/config"
-source "/root/systall/distributions/arch/config"
-source "/root/systall/distributions/arch/firstboot"
+source "/root/systall/distributions/common/firstboot"
+source "/root/systall/distributions/ubuntu/config"
 
 configure_i3 "/root/systall"
 configure_xorg "/root/systall"
-enable_wheel_sudo
 nvidia-xconfig
 
+# Copy netplat NetworkManager configuration
+cp "/root/systall/data/common/etc/netplan/01-network-manager-all.yaml" "/etc/netplan/"
+
 configure_arch "obelix" ###TIMEZONE###
-services_arch
-enable_multilib_rep
+enable_services
 
 remove_firstboot
 rm -rf /root/systall

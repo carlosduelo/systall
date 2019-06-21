@@ -9,9 +9,9 @@ source "/root/systall/distributions/ubuntu/install"
 function _fstab {
     local -r uuid_sda1="$(find_uuid_dev sda1)"
     local -r uuid_sda2="$(find_uuid_dev sda2)"
-    local -r uuid_cryptroot="$(find_uuid_dev mapper/cryptroot)"
+    local -r uuid_cryptroot="$(find_uuid_dev mapper/cryptdisk1)"
 
-    cp "$cpath/data/asterix/etc/fstab" "/etc/fstab"
+    cp "$cpath/data/obelix/etc/fstab" "/etc/fstab"
 
     sed -i "s/{{sda1}}/$uuid_sda1/g" '/etc/fstab'
     sed -i "s/{{sda2}}/$uuid_sda2/g" '/etc/fstab'
@@ -20,9 +20,11 @@ function _fstab {
 
 function _crypttab {
     local -r uuid1="$1"
+    local -r uuid2="$2"
 
     cat > '/etc/crypttab' <<EOFC
-cryptroot UUID=$uuid1 none luks
+cryptdisk1 UUID=$uuid1 none luks
+cryptdisk2 UUID=$uuid2 none luks
 EOFC
 }
 
@@ -30,7 +32,7 @@ function _grub {
     local -r model=$1
     local -r device="$(find_disk_dev "$model")"
 
-    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB "/dev/$device"
+    grub-install "/dev/$device"
     grub-mkconfig -o /boot/grub/grub.cfg
 }
 
@@ -40,13 +42,13 @@ function _run {
     local -r distribution="$3"
 
     _fstab
-    _crypttab "$(find_uuid_disk 'KINGSTON SA400S3' '3')"
+    _crypttab "$(find_uuid_disk 'M4-CT128M4SSD2' '3')" "$(find_uuid_disk 'ST9500325AS' '1')"
     install_ubuntu_repositories "$distribution"
     install_ppas "$profile" "$cpath"
     install_pkgs "$profile" "$cpath"
-    _grub 'KINGSTON SA400S3'
+    _grub 'M4-CT128M4SSD2'
 
-    create_firstboot '/root/systall/profiles/asterix/firstboot'
+    create_firstboot '/root/systall/profiles/obelix/firstboot'
 
     echo 'Type the root password'
     passwd root
@@ -55,13 +57,13 @@ function _run {
     echo 'Creating a new user, please type type the name:'
     read username
     create_user "$username"
-    usergroups=($(cat '/root/systall/data/asterix/groups'))
+    usergroups=($(cat '/root/systall/data/obelix/groups'))
     add_user_groups "$username" usergroups
 
     # Set preferences in firtsboot script
     echo 'Select a timezone'
     read timezone
-    sed -i -e "s~###TIMEZONE###~$timezone~g" "/root/systall/profiles/asterix/firstboot"
+    sed -i -e "s~###TIMEZONE###~$timezone~g" "/root/systall/profiles/obelix/firstboot"
 }
 
 _run "$@"

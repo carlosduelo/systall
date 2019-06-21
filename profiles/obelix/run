@@ -9,8 +9,8 @@ function _prepare_disks {
     local -r device_disk2="/dev/$(find_disk_dev "$model_disk2")"
 
     echo "Running fdisk"
-    sfdisk "$device_disk1" < "$cpath/data/pc/M4-CT128M4SSD2"
-    sfdisk "$device_disk2" < "$cpath/data/pc/ST9500325AS"
+    sfdisk "$device_disk1" < "$cpath/data/obelix/M4-CT128M4SSD2"
+    sfdisk "$device_disk2" < "$cpath/data/obelix/ST9500325AS"
 
     echo "Preparing boot partition"
     mkfs.fat -F32 "${device_disk1}1"
@@ -42,28 +42,26 @@ function _prepare_disks {
 function install_system {
     local -r cpath=$1
 
-    source "$cpath/distributions/arch/install"
-    source "$cpath/distributions/arch/config"
+    export DEBIAN_FRONTEND=noninteractive
+    source "$cpath/distributions/ubuntu/install"
+    source "$cpath/distributions/ubuntu/config"
     source "$cpath/distributions/common/devices"
 
     echo "Prepare disks"
     _prepare_disks "$cpath" "M4-CT128M4SSD2" "ST9500325AS"
 
-    echo "Enable multilib"
-    enable_multilib_rep
-
-    install_arch "pc" "/mnt" "$cpath"
-
-    # Create fstab
-    genfstab -U "/mnt" >> "/mnt/etc/fstab"
+    install_ubuntu '/mnt' 'bionic'
 
     # Copy data
-    cp -r "$cpath" /mnt/root/systall
+    cp -r "$cpath" '/mnt/root/systall'
 
-    # Configure
-    arch-chroot "/mnt" "/root/systall/profiles/pc/chrun"
+    # mount special devices
+    for dev in /dev /dev/pts /proc /sys /run; do
+        mount -B "$dev" "/mnt$dev";
+    done
+    chroot '/mnt' '/root/systall/profiles/obelix/chrun' 'obelix' '/root/systall' 'bionic'
 
-    umount -R "/mnt"
+    umount -R '/mnt'
     swapoff --all
     reboot
 }

@@ -5,7 +5,8 @@ function find_disk_dev {
     local model=$1
 
     if [[ $(lsblk -S -o kname,model | grep "$model" | wc -l) != 1 ]]; then
-        die 'could not identify an unique disk'
+        echo 'could not identify an unique disk'
+        exit 1
     fi
 
     local dev=$(lsblk -S -o kname,model | awk "/$model/"'{print $1}')
@@ -17,10 +18,18 @@ function find_uuid_dev {
     local device=$1
 
     if ! blkid "/dev/$device" > /dev/null; then
-        die 'could not identify an device'
+        echo 'could not identify an device'
+        exit 1
     fi
 
     local uuid=$(blkid -o export "/dev/$device" | grep "^UUID=" | sed -e 's~^UUID=~~')
 
     echo $uuid
+}
+
+function find_uuid_disk {
+    local model=$1
+    local device=$2
+
+    find_uuid_dev "$(find_disk_dev "$model")$device"
 }

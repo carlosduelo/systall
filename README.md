@@ -15,10 +15,11 @@ systall-master/update <profile>
 ```
 
 # Profiles
- - laptop
- - pc
+ - obelix
+ - asterix
 
 # TODO
 Add new profiles
- - raspberrypi
+ - panoramix
+ - idefix
  - vps4

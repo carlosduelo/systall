@@ -1,7 +1,7 @@
 #KERNEL
 linux-generic-hwe-18.04
-grub-efi
 cryptsetup
+grub-pc
 #TOOSL
 openssh-client
 openssh-server
@@ -11,6 +11,7 @@ keychain
 strace
 # veracrypt install from source
 #DESKTOP
+nvidia-384
 xorg
 lightdm
 lightdm-gtk-greeter
@@ -27,9 +28,14 @@ udisks2
 udiskie
 ntfs-3g
 dunst
+pinentry-gtk2
 network-manager
 network-manager-vpnc
-pinentry-gtk2
+#printer
+cups
+printer-driver-cups-pdf
+printer-driver-escpr
+system-config-printer
 #MULTIMEDIA
 firefox
 chromium-browser
@@ -77,6 +83,8 @@ thunderbird
 thunderbird-locale-es-es
 thunderbird-locale-en-us
 bash-completion
+# fzf install form sources
+# tabbed install from sources
 aspell
 aspell-en
 aspell-es

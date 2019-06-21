@@ -30,10 +30,11 @@ EOFL
 function enable_services {
     systemctl enable lightdm.service || true
     systemctl enable NetworkManager || true
-    systemctl enable sshd || true
+    systemctl enable ssh || true
     systemctl enable udisks2.service || true
     systemctl enable org.cups.cupsd.service || true
     systemctl enable docker.service || true
     systemctl enable pcscd.socket || true
     systemctl enable pcscd.service || true
+    systemctl enable cups.service || true
 }

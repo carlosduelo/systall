@@ -8,6 +8,9 @@ source "/root/systall/distributions/ubuntu/config"
 configure_i3 "/root/systall"
 configure_xorg "/root/systall"
 
+# Copy netplat NetworkManager configuration
+cp "/root/systall/data/common/etc/netplan/01-network-manager-all.yaml" "/etc/netplan/"
+
 configure "asterix" ###TIMEZONE###
 enable_services
 

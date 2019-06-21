@@ -10,6 +10,18 @@ function install_ubuntu {
     debootstrap "$release" "$mpath" "$repository"
 }
 
+function install_ubuntu_repositories {
+    local -r distro=$1
+    local -r apt_mirror=${2:-'archive.ubuntu.com'}
+
+    cat > /etc/apt/sources.list << EOFAPT
+deb http://$apt_mirror/ubuntu $distro main universe multiverse restricted
+deb http://$apt_mirror/ubuntu $distro-security main universe multiverse restricted
+deb http://$apt_mirror/ubuntu $distro-updates main universe multiverse restricted
+EOFAPT
+    apt-get update
+}
+
 function install_ppas {
     local -r profile=$1
     local -r cpath=$2
@@ -19,7 +31,7 @@ function install_ppas {
     apt-get -y install software-properties-common
     echo "Repositories: ${toinstall[@]}"
     for ppa in "${toinstall[@]}"; do
-        apt-add-repository "$ppa"
+        apt-add-repository -y "$ppa"
     done
 }
 
