@@ -4,12 +4,12 @@ set -euo pipefail
 function find_disk_dev {
     local model=$1
 
-    if [[ $(lsblk -S -o kname,model | grep "$model" | wc -l) != 1 ]]; then
+    if [[ $(lsblk -o kname,model | grep "$model" | wc -l) != 1 ]]; then
         echo 'could not identify an unique disk'
         exit 1
     fi
 
-    local dev=$(lsblk -S -o kname,model | awk "/$model/"'{print $1}')
+    local dev=$(lsblk -o kname,model | awk "/$model/"'{print $1}')
 
     echo $dev
 }

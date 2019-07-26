@@ -2,16 +2,16 @@
 
 case "$1" in
     lock)
-        /usr/bin/i3lock && xset dpms force off
+        /usr/bin/slock
         ;;
     logout)
         /usr/bin/i3-msg exit
         ;;
     suspend)
-        /usr/bin/i3lock && /bin/systemctl suspend
+        /usr/bin/slock /bin/systemctl suspend
         ;;
     hibernate)
-        /usr/bin/i3lock && /bin/systemctl hibernate
+        /usr/bin/slock /bin/systemctl hibernate
         ;;
     reboot)
         /bin/systemctl reboot

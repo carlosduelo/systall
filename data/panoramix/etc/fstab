@@ -1,0 +1,12 @@
+# Static information about the filesystems.
+# See fstab(5) for details.
+
+UUID={{sda1}}	/boot     	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro	0 2
+
+UUID={{sda2}}	none      	swap      	defaults,pri=-2	0 0
+
+UUID={{cryptroot}}	/         	btrfs     	rw,relatime,space_cache,subvolid=256,subvol=/@,subvol=@	0 0
+
+UUID={{cryptroot}}	/home     	btrfs     	rw,relatime,space_cache,subvolid=258,subvol=/@home,subvol=@home	0 0
+
+UUID={{cryptroot}}	/.snapshots	btrfs     	rw,relatime,space_cache,subvolid=259,subvol=/@snapshots,subvol=@snapshots	0 0

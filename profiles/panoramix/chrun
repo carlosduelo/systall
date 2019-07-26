@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "/root/systall/distributions/common/devices"
+source "/root/systall/distributions/common/user"
+source "/root/systall/distributions/common/firstboot"
+source "/root/systall/distributions/ubuntu/install"
+
+function _fstab {
+    local -r uuid_sda1="$(find_uuid_dev nvme0n1p1)"
+    local -r uuid_sda2="$(find_uuid_dev nvme0n1p2)"
+    local -r uuid_cryptroot="$(find_uuid_dev mapper/cryptdisk1)"
+
+    cp "$cpath/data/panoramix/etc/fstab" "/etc/fstab"
+
+    sed -i "s/{{sda1}}/$uuid_sda1/g" '/etc/fstab'
+    sed -i "s/{{sda2}}/$uuid_sda2/g" '/etc/fstab'
+    sed -i "s/{{cryptroot}}/$uuid_cryptroot/g" '/etc/fstab'
+}
+
+function _crypttab {
+    local -r uuid1="$1"
+    local -r uuid2="$2"
+
+    cat > '/etc/crypttab' <<EOFC
+cryptdisk1 UUID=$uuid1 none luks
+cryptdisk2 UUID=$uuid2 none luks
+EOFC
+}
+
+function _grub {
+    local -r model=$1
+    local -r device="$(find_disk_dev "$model")"
+
+    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB "/dev/$device"
+    grub-mkconfig -o /boot/grub/grub.cfg
+}
+
+function _run {
+    local -r profile="$1"
+    local -r cpath="$2"
+    local -r distribution="$3"
+
+    _fstab
+    _crypttab "$(find_uuid_disk 'HFM512GDHTNG-8710B' 'p3')" "$(find_uuid_disk 'Samsung SSD 850' '1')"
+    install_ubuntu_repositories "$distribution"
+    install_ppas "$profile" "$cpath"
+    install_pkgs "$profile" "$cpath"
+    _grub 'HFM512GDHTNG-8710B'
+
+    create_firstboot '/root/systall/profiles/panorami/firstboot'
+
+    echo 'Type the root password'
+    passwd root
+
+    # Create user
+    echo 'Creating a new user, please type type the name:'
+    read username
+    create_user "$username"
+    usergroups=($(cat '/root/systall/data/panoramix/groups'))
+    add_user_groups "$username" usergroups
+
+    # Set preferences in firtsboot script
+    echo 'Select a timezone'
+    read timezone
+    sed -i -e "s~###TIMEZONE###~$timezone~g" "/root/systall/profiles/panoramix/firstboot"
+}
+
+_run "$@"
+exit

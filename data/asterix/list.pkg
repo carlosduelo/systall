@@ -10,8 +10,10 @@ btrfs-progs
 keychain
 strace
 # veracrypt install from source
+scdaemon
 #DESKTOP
 xorg
+ofono
 lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
@@ -89,6 +91,7 @@ neovim
 emacs26
 #PROGRAMMINGTOOLS
 git
+gitk
 exuberant-ctags
 tig
 gdb

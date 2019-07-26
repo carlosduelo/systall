@@ -10,6 +10,7 @@ profile    Profile to be installed:
             - laptop
             - raspberrypi
             - asterix
+            - panoramix
 EOF
 }
 

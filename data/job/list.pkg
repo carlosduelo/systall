@@ -49,6 +49,7 @@ darktable
 vim
 vim-gtk
 git
+gitk
 exuberant-ctags
 tig
 gdb

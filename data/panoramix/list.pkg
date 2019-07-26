@@ -1,7 +1,7 @@
 #KERNEL
 linux-generic-hwe-18.04
 cryptsetup
-grub-pc
+grub-efi
 #TOOSL
 openssh-client
 openssh-server
@@ -9,11 +9,15 @@ sudo
 btrfs-progs
 keychain
 strace
+lshw
 # veracrypt install from source
 scdaemon
 #DESKTOP
-nvidia-384
+xserver-xorg-video-amdgpu-hwe-18.04
+xserver-xorg-video-intel-hwe-18.04
+mesa-vulkan-drivers
 xorg
+ofono
 lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
