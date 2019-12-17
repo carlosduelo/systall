@@ -105,6 +105,7 @@ gdb
 valgrind
 gcc
 clang
+virtualenvwrapper
 #CONTAINER
 debootstrap
 ubuntu-keyring
