@@ -9,6 +9,7 @@ sudo
 btrfs-progs
 keychain
 strace
+lshw
 # veracrypt install from source
 scdaemon
 #DESKTOP

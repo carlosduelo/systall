@@ -11,9 +11,14 @@ keychain
 strace
 # veracrypt install from source
 scdaemon
+lshw
 #DESKTOP
-nvidia-384
+xserver-xorg-video-nvidia-435
+nvidia-driver-435
+nvidia-settings
+libnvidia-gl-435:i386
 xorg
+ofono
 lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
