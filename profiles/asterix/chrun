@@ -9,12 +9,14 @@ source "/root/systall/distributions/ubuntu/install"
 function _fstab {
     local -r uuid_sda1="$(find_uuid_dev sda1)"
     local -r uuid_sda2="$(find_uuid_dev sda2)"
+    local -r uuid_sda3="$(find_uuid_dev sda3)"
     local -r uuid_cryptroot="$(find_uuid_dev mapper/cryptroot)"
 
     cp "$cpath/data/asterix/etc/fstab" "/etc/fstab"
 
     sed -i "s/{{sda1}}/$uuid_sda1/g" '/etc/fstab'
     sed -i "s/{{sda2}}/$uuid_sda2/g" '/etc/fstab'
+    sed -i "s/{{sda3}}/$uuid_sda3/g" '/etc/fstab'
     sed -i "s/{{cryptroot}}/$uuid_cryptroot/g" '/etc/fstab'
 }
 
@@ -30,7 +32,7 @@ function _grub {
     local -r model=$1
     local -r device="$(find_disk_dev "$model")"
 
-    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB "/dev/$device"
+    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB "/dev/$device"
     grub-mkconfig -o /boot/grub/grub.cfg
 }
 
@@ -40,11 +42,11 @@ function _run {
     local -r distribution="$3"
 
     _fstab
-    _crypttab "$(find_uuid_disk 'KINGSTON SA400S3' '3')"
+    _crypttab "$(find_uuid_disk 'KINGSTON_SA400S37120G' '4')"
     install_ubuntu_repositories "$distribution"
-    install_ppas "$profile" "$cpath"
+    # install_ppas "$profile" "$cpath"
     install_pkgs "$profile" "$cpath"
-    _grub 'KINGSTON SA400S3'
+    _grub 'KINGSTON_SA400S37120G'
 
     create_firstboot '/root/systall/profiles/asterix/firstboot'
 
