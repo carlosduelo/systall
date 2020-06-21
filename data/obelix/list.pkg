@@ -17,6 +17,7 @@ xserver-xorg-video-nvidia-440
 nvidia-driver-440
 nvidia-settings
 libnvidia-gl-440:i386
+mesa-vulkan-drivers
 xorg
 ofono
 lightdm

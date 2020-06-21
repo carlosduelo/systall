@@ -1,5 +1,5 @@
 #KERNEL
-linux-generic-hwe-18.04
+linux-generic-hwe-20.04
 cryptsetup
 grub-efi
 #TOOSL
@@ -13,8 +13,8 @@ lshw
 # veracrypt install from source
 scdaemon
 #DESKTOP
-xserver-xorg-video-amdgpu-hwe-18.04
-xserver-xorg-video-intel-hwe-18.04
+xserver-xorg-video-amdgpu
+xserver-xorg-video-intel
 mesa-vulkan-drivers
 xorg
 ofono
@@ -88,8 +88,8 @@ thunderbird
 thunderbird-locale-es-es
 thunderbird-locale-en-us
 bash-completion
-# fzf install form sources
-# tabbed install from sources
+fzf
+ripgrep
 aspell
 aspell-en
 aspell-es
@@ -99,7 +99,7 @@ asciinema
 #EDITORS
 vim
 neovim
-emacs26
+emacs
 #PROGRAMMINGTOOLS
 git
 gitk
