@@ -50,7 +50,7 @@ function install_system {
     echo "Prepare disks"
     _prepare_disks "$cpath" "M4-CT128M4SSD2" "ST9500325AS"
 
-    install_ubuntu '/mnt' 'bionic'
+    install_ubuntu '/mnt' 'focal'
 
     # Copy data
     cp -r "$cpath" '/mnt/root/systall'
@@ -59,7 +59,7 @@ function install_system {
     for dev in /dev /dev/pts /proc /sys /run; do
         mount -B "$dev" "/mnt$dev";
     done
-    chroot '/mnt' '/root/systall/profiles/obelix/chrun' 'obelix' '/root/systall' 'bionic'
+    chroot '/mnt' '/root/systall/profiles/obelix/chrun' 'obelix' '/root/systall' 'focal'
 
     umount -R '/mnt'
     swapoff --all

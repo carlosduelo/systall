@@ -3,7 +3,7 @@ set -euo pipefail
 
 function install_ubuntu {
     local -r mpath=$1
-    local -r release="${2:-'bionic'}"
+    local -r release="${2:-'focal'}"
     local -r repository="http://archive.ubuntu.com/ubuntu/"
 
     echo "Building machine..."

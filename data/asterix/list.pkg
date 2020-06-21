@@ -1,7 +1,7 @@
 #KERNEL
-linux-generic
-grub-efi
+linux-generic-hwe-20.04
 cryptsetup
+grub-efi
 #TOOSL
 openssh-client
 openssh-server
@@ -30,9 +30,9 @@ udisks2
 udiskie
 ntfs-3g
 dunst
+pinentry-gtk2
 network-manager
 network-manager-vpnc
-pinentry-gtk2
 #MULTIMEDIA
 firefox
 chromium-browser
@@ -80,6 +80,8 @@ thunderbird
 thunderbird-locale-es-es
 thunderbird-locale-en-us
 bash-completion
+fzf
+ripgrep
 aspell
 aspell-en
 aspell-es

@@ -1,5 +1,5 @@
 #KERNEL
-linux-generic-hwe-18.04
+linux-generic-hwe-20.04
 cryptsetup
 grub-pc
 #TOOSL
@@ -9,14 +9,14 @@ sudo
 btrfs-progs
 keychain
 strace
+lshw
 # veracrypt install from source
 scdaemon
-lshw
 #DESKTOP
-xserver-xorg-video-nvidia-435
-nvidia-driver-435
+xserver-xorg-video-nvidia-440
+nvidia-driver-440
 nvidia-settings
-libnvidia-gl-435:i386
+libnvidia-gl-440:i386
 xorg
 ofono
 lightdm
@@ -89,8 +89,8 @@ thunderbird
 thunderbird-locale-es-es
 thunderbird-locale-en-us
 bash-completion
-# fzf install form sources
-# tabbed install from sources
+fzf
+ripgrep
 aspell
 aspell-en
 aspell-es
@@ -100,7 +100,7 @@ asciinema
 #EDITORS
 vim
 neovim
-emacs26
+emacs
 #PROGRAMMINGTOOLS
 git
 gitk
