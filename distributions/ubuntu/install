@@ -15,10 +15,14 @@ function install_ubuntu_repositories {
     local -r apt_mirror=${2:-'archive.ubuntu.com'}
 
     cat > /etc/apt/sources.list << EOFAPT
-deb http://$apt_mirror/ubuntu $distro main universe multiverse restricted
-deb http://$apt_mirror/ubuntu $distro-security main universe multiverse restricted
-deb http://$apt_mirror/ubuntu $distro-updates main universe multiverse restricted
+deb http://$apt_mirror/ubuntu $distro main
+deb http://$apt_mirror/ubuntu $distro-security main
+deb http://$apt_mirror/ubuntu $distro-updates main
 EOFAPT
+    apt-get update
+    add-apt-repository universe
+    add-apt-repository multiverse
+    add-apt-repository restricted
     apt-get update
 }
 

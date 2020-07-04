@@ -48,22 +48,26 @@ function _run {
     install_pkgs "$profile" "$cpath"
     _grub 'M4-CT128M4SSD2'
 
-    create_firstboot '/root/systall/profiles/obelix/firstboot'
+    configure_i3 "/root/systall"
+    configure_xorg "/root/systall"
+
+    echo 'Select a timezone'
+    read -r timezone
+    configure_arch "obelix" "$timezone"
+    # Copy netplat NetworkManager configuration
+    cp "/root/systall/data/common/etc/netplan/01-network-manager-all.yaml" "/etc/netplan/"
+    enable_services
 
     echo 'Type the root password'
     passwd root
 
     # Create user
     echo 'Creating a new user, please type type the name:'
-    read username
+    read -r username
     create_user "$username"
     usergroups=($(cat '/root/systall/data/obelix/groups'))
     add_user_groups "$username" usergroups
-
-    # Set preferences in firtsboot script
-    echo 'Select a timezone'
-    read timezone
-    sed -i -e "s~###TIMEZONE###~$timezone~g" "/root/systall/profiles/obelix/firstboot"
+    rm -rf /root/systall
 }
 
 _run "$@"

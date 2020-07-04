@@ -14,9 +14,9 @@ lshw
 scdaemon
 #DESKTOP
 xserver-xorg-video-nvidia-440
-nvidia-driver-440
 nvidia-settings
-libnvidia-gl-440:i386
+# nvidia-driver-440
+# libnvidia-gl-440
 mesa-vulkan-drivers
 xorg
 ofono
@@ -83,7 +83,7 @@ zip
 unzip
 unrar
 pass
-#pass-otp install from sources
+pass-extension-otp
 stow
 mutt
 thunderbird

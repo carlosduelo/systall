@@ -5,15 +5,7 @@ source "/root/systall/distributions/common/config"
 source "/root/systall/distributions/common/firstboot"
 source "/root/systall/distributions/ubuntu/config"
 
-configure_i3 "/root/systall"
-configure_xorg "/root/systall"
 nvidia-xconfig
-
-# Copy netplat NetworkManager configuration
-cp "/root/systall/data/common/etc/netplan/01-network-manager-all.yaml" "/etc/netplan/"
-
-configure_arch "obelix" ###TIMEZONE###
-enable_services
 
 remove_firstboot
 rm -rf /root/systall
