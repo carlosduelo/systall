@@ -3,8 +3,10 @@ set -euo pipefail
 
 source "/root/systall/distributions/common/devices"
 source "/root/systall/distributions/common/user"
+source "/root/systall/distributions/common/config"
 source "/root/systall/distributions/common/firstboot"
 source "/root/systall/distributions/ubuntu/install"
+source "/root/systall/distributions/ubuntu/config"
 
 function _fstab {
     local -r uuid_sda1="$(find_uuid_dev nvme0n1p1)"
@@ -32,8 +34,11 @@ function _grub {
     local -r model=$1
     local -r device="$(find_disk_dev "$model")"
 
-    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB "/dev/$device"
-    grub-mkconfig -o /boot/grub/grub.cfg
+    apt install -y --reinstall grub-efi linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04
+    update-initramfs -c -k all
+    echo "GRUB_ENABLE_CRYPTODISK=y" >> /etc/default/grub
+    grub-install "/dev/$device"
+    update-grub
 }
 
 function _run {
@@ -43,27 +48,12 @@ function _run {
 
     _fstab
     _crypttab "$(find_uuid_disk 'HFM512GDHTNG-8710B' 'p3')" "$(find_uuid_disk 'Samsung SSD 850' '1')"
-    install_ubuntu_repositories "$distribution"
-    install_ppas "$profile" "$cpath"
-    install_pkgs "$profile" "$cpath"
     _grub 'HFM512GDHTNG-8710B'
-
-    create_firstboot '/root/systall/profiles/panorami/firstboot'
 
     echo 'Type the root password'
     passwd root
 
-    # Create user
-    echo 'Creating a new user, please type type the name:'
-    read username
-    create_user "$username"
-    usergroups=($(cat '/root/systall/data/panoramix/groups'))
-    add_user_groups "$username" usergroups
-
-    # Set preferences in firtsboot script
-    echo 'Select a timezone'
-    read timezone
-    sed -i -e "s~###TIMEZONE###~$timezone~g" "/root/systall/profiles/panoramix/firstboot"
+    rm -rf /root/systall
 }
 
 _run "$@"

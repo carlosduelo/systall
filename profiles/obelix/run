@@ -12,8 +12,9 @@ function _prepare_disks {
     sfdisk "$device_disk1" < "$cpath/data/obelix/M4-CT128M4SSD2"
     sfdisk "$device_disk2" < "$cpath/data/obelix/ST9500325AS"
 
+    swapoff --all
     echo "Preparing boot partition"
-    mkfs.fat -F32 "${device_disk1}1"
+    mkfs.ext4 "${device_disk1}1"
     echo "Make Swap partition"
     mkswap "${device_disk1}2"
     echo "Preparing dm-crypt"
@@ -21,47 +22,61 @@ function _prepare_disks {
     cryptsetup --persistent --allow-discards open "${device_disk1}3" cryptdisk1
     cryptsetup -y -v luksFormat --type luks2 "${device_disk2}1"
     cryptsetup --persistent --allow-discards open "${device_disk2}1" cryptdisk2
-
     mkfs.btrfs -d single -f /dev/mapper/cryptdisk1 /dev/mapper/cryptdisk2
+}
+
+function _create_subvolumes {
     echo "Preparing rootfs subvolumes"
     mount /dev/mapper/cryptdisk1 /mnt
     btrfs subvolume create /mnt/@
     btrfs subvolume create /mnt/@home
     btrfs subvolume create /mnt/@snapshots
-    umount /mnt
+    umount -R /mnt
+}
+
+function _mount {
+    local -r cpath=$1
+    local -r model_disk1=$2
+    local -r model_disk2=$3
+    local -r device_disk1="/dev/$(find_disk_dev "$model_disk1")"
+    local -r device_disk2="/dev/$(find_disk_dev "$model_disk2")"
 
     echo "Mount on /mnt"
     mount -o subvol=@ /dev/mapper/cryptdisk1 /mnt
-    mkdir /mnt/{boot,home,.snapshots}
+    mkdir -p /mnt/{boot,home,.snapshots}
     mount "${device_disk1}1" /mnt/boot
     mount -o subvol=@home /dev/mapper/cryptdisk1 /mnt/home
     mount -o subvol=@snapshots /dev/mapper/cryptdisk1  /mnt/.snapshots
     swapon "${device_disk1}2"
 }
 
-function install_system {
+function pre_install {
+    local -r cpath=$1
+
+    source "$cpath/distributions/common/devices"
+
+    _prepare_disks "$cpath" "M4-CT128M4SSD2" "ST9500325AS"
+    _create_subvolumes
+}
+
+function post_install {
     local -r cpath=$1
 
     export DEBIAN_FRONTEND=noninteractive
-    source "$cpath/distributions/ubuntu/install"
-    source "$cpath/distributions/ubuntu/config"
     source "$cpath/distributions/common/devices"
 
-    echo "Prepare disks"
-    _prepare_disks "$cpath" "M4-CT128M4SSD2" "ST9500325AS"
-
-    install_ubuntu '/mnt' 'focal'
+    _mount "$cpath" "M4-CT128M4SSD2" "ST9500325AS"
 
     # Copy data
     cp -r "$cpath" '/mnt/root/systall'
 
     # mount special devices
     for dev in /dev /dev/pts /proc /sys /run; do
-        mount -B "$dev" "/mnt$dev";
+       mount -B "$dev" "/mnt$dev";
     done
-    chroot '/mnt' '/root/systall/profiles/obelix/chrun' 'obelix' '/root/systall' 'focal'
+    chroot '/mnt' '/root/systall/profiles/obelix/chrun' 'obelix' '/root/systall'
 
-    umount -R '/mnt'
-    swapoff --all
-    reboot
+    # umount -R '/mnt'
+    # swapoff --all
+    echo "Finish!!!"
 }

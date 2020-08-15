@@ -3,7 +3,7 @@ set -euo pipefail
 
 function show_usage {
     cat <<EOF
-Usage: $0 [profile]
+Usage: $0 [profile] [command]
 
 profile    Profile to be installed:
             - obelix
@@ -11,25 +11,41 @@ profile    Profile to be installed:
             - raspberrypi
             - asterix
             - panoramix
+command    Command to run:
+            - pre-install
+            - post-install
+            - configure
 EOF
 }
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 2 ]; then
     show_usage
     exit
 fi
 
 function run_profile {
     local -r profile=$1
+    local -r cmd=${2:-'no cmd'}
     local -r cpath=$(cd $(dirname $0); pwd)
     local -r path="$cpath/profiles/$profile/run"
     if [ ! -f "$path" ]; then
         echo "Profile does not exist"
         exit
     fi
-    source "$path"
-    echo "Install system"
-    install_system "$cpath"
+    source "$path"   
+    case "$cmd" in
+      pre-install)
+          echo "Pre install"
+          pre_install "$cpath"
+          ;;
+      post-install)
+          echo "Post install"
+          post_install "$cpath"
+          ;;
+      *)
+          echo "No valid command $cmd"
+          ;;
+    esac
 }
 
-run_profile "$1"
+run_profile "$@"

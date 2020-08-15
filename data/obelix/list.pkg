@@ -13,11 +13,11 @@ lshw
 # veracrypt install from source
 scdaemon
 #DESKTOP
-xserver-xorg-video-nvidia-440
-nvidia-settings
+# xserver-xorg-video-nvidia-440
+# nvidia-settings
 # nvidia-driver-440
 # libnvidia-gl-440
-mesa-vulkan-drivers
+# mesa-vulkan-drivers
 xorg
 ofono
 lightdm

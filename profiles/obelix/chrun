@@ -3,8 +3,10 @@ set -euo pipefail
 
 source "/root/systall/distributions/common/devices"
 source "/root/systall/distributions/common/user"
+source "/root/systall/distributions/common/config"
 source "/root/systall/distributions/common/firstboot"
 source "/root/systall/distributions/ubuntu/install"
+source "/root/systall/distributions/ubuntu/config"
 
 function _fstab {
     local -r uuid_sda1="$(find_uuid_dev sda1)"
@@ -32,41 +34,25 @@ function _grub {
     local -r model=$1
     local -r device="$(find_disk_dev "$model")"
 
+    apt install -y --reinstall grub-pc linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04
+    update-initramfs -c -k all
+    echo "GRUB_ENABLE_CRYPTODISK=y" >> /etc/default/grub
     grub-install "/dev/$device"
-    grub-mkconfig -o /boot/grub/grub.cfg
+    update-grub
+    # grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 function _run {
     local -r profile="$1"
     local -r cpath="$2"
-    local -r distribution="$3"
 
     _fstab
     _crypttab "$(find_uuid_disk 'M4-CT128M4SSD2' '3')" "$(find_uuid_disk 'ST9500325AS' '1')"
-    install_ubuntu_repositories "$distribution"
-    install_ppas "$profile" "$cpath"
-    install_pkgs "$profile" "$cpath"
     _grub 'M4-CT128M4SSD2'
-
-    configure_i3 "/root/systall"
-    configure_xorg "/root/systall"
-
-    echo 'Select a timezone'
-    read -r timezone
-    configure_arch "obelix" "$timezone"
-    # Copy netplat NetworkManager configuration
-    cp "/root/systall/data/common/etc/netplan/01-network-manager-all.yaml" "/etc/netplan/"
-    enable_services
 
     echo 'Type the root password'
     passwd root
 
-    # Create user
-    echo 'Creating a new user, please type type the name:'
-    read -r username
-    create_user "$username"
-    usergroups=($(cat '/root/systall/data/obelix/groups'))
-    add_user_groups "$username" usergroups
     rm -rf /root/systall
 }
 

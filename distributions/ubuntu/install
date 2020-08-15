@@ -20,6 +20,7 @@ deb http://$apt_mirror/ubuntu $distro-security main
 deb http://$apt_mirror/ubuntu $distro-updates main
 EOFAPT
     apt-get update
+    apt-get -y install software-properties-common
     add-apt-repository universe
     add-apt-repository multiverse
     add-apt-repository restricted
